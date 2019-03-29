@@ -22,8 +22,8 @@ app.use(passport.initialize());
 require('./config/passport')(passport);
 
 app.get('/', (req, res) => res.send('Hello World'));
-app.use('/api/users', userRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/profile', profileRoutes);
-app.use('/api/posts', postRoutes);
+app.use('/api/post', postRoutes);
 
 app.listen(PORT, () => console.log('Server running on port ' + PORT));

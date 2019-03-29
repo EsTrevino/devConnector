@@ -12,3 +12,4 @@ mongoose
   .catch(() => console.log('error on database connection'));
 
 module.exports.User = require('./user');
+module.exports.Profile = require('./profile');
