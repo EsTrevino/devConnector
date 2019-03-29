@@ -18,8 +18,8 @@ app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(passport.initialize());
-// require('./config/passport')(passport);
+app.use(passport.initialize());
+require('./config/passport')(passport);
 
 app.get('/', (req, res) => res.send('Hello World'));
 app.use('/api/users', userRoutes);

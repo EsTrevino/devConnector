@@ -7,20 +7,27 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config/keys');
 const jwtSecret = config.jwtSecret;
+const validateRegisterInput = require('../validation/register');
+const validateLoginInput = require('../validation/login');
 
 router.get('/', (req, res) => {
   res.status(200).json({ message: 'user routes work' });
 });
 
 //register route
-router.get('/register', (req, res) => {
+router.post('/register', (req, res) => {
+  const { errors, isValid } = validateRegisterInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const { name, email, password } = req.body;
 
   User.findOne({ email: email }).then(user => {
     if (user) {
-      res
-        .status(400)
-        .json({ message: 'Account with this email already exists' });
+      errors.existingUser = 'Account with this email already exists';
+      res.status(400).json(errors);
     } else {
       const avatar = gravatar.url(email, {
         s: '200',
@@ -59,11 +66,18 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const { email, password } = req.body;
 
   User.findOne({ email: email }).then(user => {
     if (!user) {
-      res.status(404).json({ message: 'User email not found' });
+      errors.user = 'User email not found';
+      res.status(404).json(errors);
     } else {
       bcrypt.compare(password, user.password).then(isMatch => {
         if (isMatch) {

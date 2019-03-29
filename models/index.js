@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const config = require('../config/keys');
 const connectionString = config.mongoURI;
-console.log(connectionString);
 
 mongoose.set('debug', true);
 
